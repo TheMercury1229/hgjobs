@@ -6,12 +6,28 @@ import {
   SidebarGroupLabel,
 } from "@/components/ui/sidebar";
 import { SidebarOrganizationButton } from "@/features/organizations/components/SidebarOrganizationButton";
-import { SidebarUserButton } from "@/features/users/components/SidebarUserButton";
-import { ClipboardListIcon, LogInIcon, PlusIcon } from "lucide-react";
+import { getCurrentOrganization } from "@/services/clerk/lib/getCurrentAuth";
+import { ClipboardListIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import { redirect } from "next/navigation";
+import { Suspense } from "react";
 
-const EmployerLayout = ({ children }: { children: React.ReactNode }) => {
+export default function EmployerLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <Suspense>
+      <LayoutSuspense>{children}</LayoutSuspense>
+    </Suspense>
+  );
+}
+
+const LayoutSuspense = async ({ children }: { children: React.ReactNode }) => {
+  const { orgId } = await getCurrentOrganization({ allData: true });
+  if (orgId == null) return redirect("/organizations/select");
+  console.log("orgId", orgId);
   return (
     <AppSidebar
       content={
@@ -19,7 +35,7 @@ const EmployerLayout = ({ children }: { children: React.ReactNode }) => {
           <SidebarGroup>
             <SidebarGroupLabel>Job Listing</SidebarGroupLabel>
             <SidebarGroupAction title="Create Job Listing" asChild>
-              <Link href="employer/job-listings/new">
+              <Link href="/employer/job-listing/new">
                 <PlusIcon />
                 <span className="sr-only">Add Job Listing</span>
               </Link>
@@ -43,5 +59,3 @@ const EmployerLayout = ({ children }: { children: React.ReactNode }) => {
     </AppSidebar>
   );
 };
-
-export default EmployerLayout;

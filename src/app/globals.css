@@ -1,9 +1,12 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  --color-featured-foreground: var(--featured-foreground);
+  --color-featured: var(--featured);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
@@ -44,6 +47,8 @@
 }
 
 :root {
+  --featured: oklch(0.7275 0.1697 308.49);
+  --featured-foreground: oklch(0.145 0 0);
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.13 0.028 261.692);
@@ -60,6 +65,7 @@
   --accent: oklch(0.967 0.003 264.542);
   --accent-foreground: oklch(0.21 0.034 264.665);
   --destructive: oklch(0.577 0.245 27.325);
+
   --border: oklch(0.928 0.006 264.531);
   --input: oklch(0.928 0.006 264.531);
   --ring: oklch(0.707 0.022 261.325);
@@ -79,6 +85,8 @@
 }
 
 .dark {
+  --featured: oklch(0.654 0.219 308.49);
+  --featured-foreground: oklch(0.985 0 0);
   --background: oklch(0.13 0.028 261.692);
   --foreground: oklch(0.985 0.002 247.839);
   --card: oklch(0.21 0.034 264.665);
@@ -118,5 +126,25 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+  .mdxeditor-root-contenteditable {
+    @apply border-input has-focus-visible:border-ring has-focus-visible:ring-ring/50 dark:bg-input/30 rounded-md rounded-t-none border bg-transparent px-3 
+    shadow-xs outline-none has-focus-visible:ring-[3px]
+    disabled:cursor-not-allowed disabled:opacity-50 
+    overflow-hidden;
+    & * {
+      outline: none;
+    }
+  }
+
+  .mdxeditor-toolbar {
+    @apply bg-card border-card rounded-md !rounded-b-none shadow-sm flex items-center gap-1 flex-wrap;
+  }
+  .mdxeditor-popup-container {
+    @apply !z-50;
+  }
+
+  .dark-theme {
+    --basePageBg: var(--muted) !important;
   }
 }
